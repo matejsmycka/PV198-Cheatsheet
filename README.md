@@ -1,9 +1,12 @@
 # MK66
 
-Documentation: https://is.muni.cz/auth/el/fi/podzim2024/PV198/um/FRDM-K66F-reference-manual.pdf
-SDK Documentation: https://mcuxpresso.nxp.com/api_doc/dev/1393/a00123.html
+- Documentation: https://is.muni.cz/auth/el/fi/podzim2024/PV198/um/FRDM-K66F-reference-manual.pdf
+- SDK Documentation: https://mcuxpresso.nxp.com/api_doc/dev/1393/a00123.html
+
 ## GPIO
 
+- General Purpose Input/Output
+- Values: 0 or 1
 ```
 GPIO_PortToggle(base, pin)
 GPIO_PinRead (gpio_port_num_t port, uint8_t pin)
