@@ -1,13 +1,20 @@
 # MK66
 
 Documentation: https://is.muni.cz/auth/el/fi/podzim2024/PV198/um/FRDM-K66F-reference-manual.pdf
-
+SDK Documentation: https://mcuxpresso.nxp.com/api_doc/dev/1393/a00123.html
 ## GPIO
 
 ```
 GPIO_PortToggle(base, pin)
+GPIO_PinRead (gpio_port_num_t port, uint8_t pin)
+# Example
 GPIO_PinRead(base, pin)
-GPIO_PinRead(base, pin)
+
+GPIO_PortSet (gpio_port_num_t port, uint32_t mask)
+# Example
+GPIO_PortSet(BOARD_LED_RED_GPIO, 1u << BOARD_LED_RED_GPIO_PIN | 1u << BOARD_LED_GREEN_GPIO_PIN | 1u << BOARD_LED_BLUE_GPIO_PIN)
+
+GPIO_PinWrite (gpio_port_num_t port, uint8_t pin, uint8_t output)
 
 # led green
 GPIO_PortToggle(BOARD_LED_GREEN_GPIO, 1u << BOARD_LED_GREEN_GPIO_PIN)
@@ -15,8 +22,8 @@ GPIO_PortToggle(BOARD_LED_GREEN_GPIO, 1u << BOARD_LED_GREEN_GPIO_PIN)
 
 ## PWM
 
-Pulse-width modulation 
-FTM is an enhanced version of the Timer/PWM module (TPM)
+- Pulse-width modulation 
+- FTM is an enhanced version of the Timer/PWM module (TPM)
 
 ```
 FTM_UpdatePwmDutycycle(FTM2_PERIPHERAL, kFTM_Chnl_1, kFTM_EdgeAlignedPwm, percentage);
@@ -25,7 +32,8 @@ FTM_SetSoftwareTrigger(FTM2_PERIPHERAL,true);
 
 ## ADC
 
-Analog-to-Digital Converter
+- Analog-to-Digital Converter
+- ADC16 is a 16-bit converter
 
 ```
 volatile int xy = 0;
