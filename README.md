@@ -95,12 +95,27 @@ rslt = bmp280_get_comp_temp_double(&temp, ucomp_data.uncomp_temp, &bmp);
 /* Getting the compensated pressure as floating point value */
 rslt = bmp280_get_comp_pres_double(&pres, ucomp_data.uncomp_press, &bmp);
 ```
+
+```C
+void spi_send(uint8_t addr, uint8_t val)
+{
+	uint8_t masterTxBuffer[] = {addr, val};
+	dspi_transfer_t masterXfer = {
+			.txData = masterTxBuffer,
+			.rxData = NULL,
+			.dataSize = 2,
+			.configFlags = kDSPI_MasterCtar0 | kDSPI_MasterPcsContinuous
+	};
+	DSPI_MasterTransferBlocking(PERIPHERAL, &masterXfer);
+}
+```
+
 ### I2C
 
 - FXOS8700CQ accelerometer
 - Documentation: https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf
 
-```
+```C
 #define SENSOR_ADDRESS 0x1DU
 #define DEFAULT_DATA_SCALE 2U
 #define BUFFER_SIZE 6
@@ -109,7 +124,52 @@ int8_t buffer[6] = {0};
 
 BOARD_Accel_I2C_Receive(SENSOR_ADDRESS, OUT_X_MSB_REG, 1, buffer, 6);
 
+
+status_t BOARD_I2C_Send(I2C_Type *base,
+                        uint8_t deviceAddress,
+                        uint32_t subAddress,
+                        uint8_t subaddressSize,
+                        uint8_t *txBuff,
+                        uint8_t txBuffSize)
+{
+    i2c_master_transfer_t masterXfer;
+
+    /* Prepare transfer structure. */
+    masterXfer.slaveAddress   = deviceAddress;
+    masterXfer.direction      = kI2C_Write;
+    masterXfer.subaddress     = subAddress;
+    masterXfer.subaddressSize = subaddressSize;
+    masterXfer.data           = txBuff;
+    masterXfer.dataSize       = txBuffSize;
+    masterXfer.flags          = kI2C_TransferDefaultFlag;
+
+    return I2C_MasterTransferBlocking(base, &masterXfer);
+}
+
+status_t BOARD_I2C_Receive(I2C_Type *base,
+                           uint8_t deviceAddress,
+                           uint32_t subAddress,
+                           uint8_t subaddressSize,
+                           uint8_t *rxBuff,
+                           uint8_t rxBuffSize)
+{
+    i2c_master_transfer_t masterXfer;
+
+    /* Prepare transfer structure. */
+    masterXfer.slaveAddress   = deviceAddress;
+    masterXfer.subaddress     = subAddress;
+    masterXfer.subaddressSize = subaddressSize;
+    masterXfer.data           = rxBuff;
+    masterXfer.dataSize       = rxBuffSize;
+    masterXfer.direction      = kI2C_Read;
+    masterXfer.flags          = kI2C_TransferDefaultFlag;
+
+    return I2C_MasterTransferBlocking(base, &masterXfer);
+}
+
 ```
+
+
 
 
 ## Misc
